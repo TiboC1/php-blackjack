@@ -12,9 +12,6 @@ class Blackjack {
         $this->score += rand(1, 11) + rand(1, 11);
     }
 
-    public function hit() {
-        //$this->score += rand(1, 11);
-    }
     public function stand(){
 
     }
@@ -34,8 +31,6 @@ class Player extends Blackjack {
 
     public function hit() {
         $this->score += rand(1, 11);
-        $this->score = $_SESSION["playerScore"];
-        print_r($_SESSION["playerScore"]);
     }
 
     public function stand(){
