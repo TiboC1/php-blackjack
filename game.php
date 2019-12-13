@@ -11,7 +11,7 @@ function whatIsHappening() {
     var_dump($_COOKIE);
     echo '<h2>$_SESSION</h2>';
     var_dump($_SESSION);
-}
+};
 
 // importing blackjack class
 require "blackjack.php";
@@ -24,12 +24,10 @@ session_start();
 if(!isset($_SESSION["player"])){
     $player = new Player(0, "Tibo");
     $player->initGame();
-    $_SESSION["playerScore"] = $player->score;
     $_SESSION["player"] = $player;
 
     $dealer = new Dealer(0);
     $dealer->initGame();
-    $_SESSION["dealerScore"] = $dealer->score;
     $_SESSION["dealer"] = $dealer;
 
 } else {
@@ -37,20 +35,20 @@ if(!isset($_SESSION["player"])){
     $dealer = $_SESSION['dealer'];
 };
 
-
+whatIsHappening();
 
 // saving instances to session
 
-
-
-whatIsHappening();
-
-if(isset($_POST["submit"]))
-{
-    echo("lol");
+if(isset($_POST["hit"])){
    $player->hit();
-};
+} else if (isset($_POST["stand"])){
+    $player->stand($dealer, $player);
+} else if (isset($_POST["surr"])){
+    $player->surrender($player, $dealer);
 
+} else if (isset($_POST["new"])){
+
+}
 ?>
 
 <!DOCTYPE html>
@@ -78,15 +76,16 @@ if(isset($_POST["submit"]))
 <div class="player">
     <h2>Dealer</h2>
     <p class="score"><?php 
-        if(!isset($_SESSION["dealerScore"])){
-        
-            echo("Your score is $dealer->score");
-        } else {
-            echo "Your score is " . $_SESSION["dealerScore"];
-        }
-    ?></p>
+    if (isset($_POST["stand"]) || isset($_POST["surr"])){
+        echo $player->stand($dealer, $player);
+    } else {
+        echo "Score Hidden";
+    }
+     ?></p>
     <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-        <button type="submit" name="submit">HIT</button>
+        <button type="submit" name="hit">Hit</button>
+        <button type="submit" name="stand">Stand</button>
+        <button type="submit" name="surr">Surrender</button>
     </form>
 
 </div>

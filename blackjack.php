@@ -11,11 +11,14 @@ class Blackjack {
     public function initGame(){
         $this->score += rand(1, 11) + rand(1, 11);
     }
-
-    public function stand(){
-
+    public function hit() {
+        $this->score += rand(1, 11);
     }
-    public function surrender(){
+    public function surrender($player, $dealer){
+        $player->score = 0;
+        $dealer->score = 0;
+        $player->initGame();
+        $dealer->initGame();
 
     }
 };
@@ -29,12 +32,8 @@ class Player extends Blackjack {
         parent::__construct($score);
     }
 
-    public function hit() {
-        $this->score += rand(1, 11);
-    }
-
-    public function stand(){
-        dealerTurn($dealer->score, $this->score);
+    public function stand($dealer, $player){
+       return dealerTurn($dealer, $player);
     }
 };
 
@@ -44,19 +43,23 @@ class Dealer extends Blackjack {
         parent::__construct($score);
     }
     public function stand(){
-        echo($this->score);
+
     }
 };
 
 
-function dealerTurn($dealerScore, $playerScore){
+function dealerTurn($dealer, $player){
+    $dealerScore = $dealer->score;
+    $playerScore = $player->score;
 
-    if ($dealerScore < 18) {
-        $dealer->hit();
-    } else if ($dealerScore >= 18 && $dealerScore < $playerScore){
-        $dealer->hit();
-    } else {
-        $dealer->stand();
+    while ($dealerScore < 18) {
+        $dealerScore += rand(1, 11);
     }
+    while ($dealerScore >= 18 && $dealerScore < $playerScore){
+        $dealerScore += rand(1, 11);
+    }
+    $dealer->stand();
+    return $dealerScore;
+
 };
 ?>
